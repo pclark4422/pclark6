@@ -1,0 +1,56 @@
+P shirl
+P ros
+P bill
+P mary
+p chris
+P ed
+P terry
+P gene
+p pat
+P shirl
+p jason
+p larry
+P carol
+W bill
+F bill ros
+f larry bill
+F shirl larry
+F ros larry
+F mary bill
+F shirl bill
+F carol shirl
+F ed gene
+F bill bill
+f ed mary
+F gene mary
+F ed terry
+f carol terry
+f carol jason
+f pat chris
+f pat terry
+f pat carol
+f carol chris
+f carol pat
+f chris terry
+Q bill gene
+Q bill mary
+q ros larry
+q ros ros
+Q ros george
+q jason mary
+L bill
+L ros
+L carol
+L chris
+L mary
+U mary bill
+U ros ros
+U jason pat
+L bill
+L pat
+L mary
+L terry
+L george
+X
+
+
