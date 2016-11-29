@@ -1,0 +1,28 @@
+p al
+P babs
+P carl
+p
+p jim
+f al carl
+F al jim
+F
+f carl
+f carl jim
+L
+L al
+l jim
+p doug
+f al doug
+L al
+U doug
+U 
+U doug j
+u doug jim
+L al
+Q jim al
+Q jim doug
+Q
+Q al
+Q al carl
+L al
+X

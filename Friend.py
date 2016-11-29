@@ -19,20 +19,23 @@ class Friend:
     ### Determines whether or not the FaceBook user self's name comes before
     ### the Facebook user other's name in the dictionary
     def __lt__(self, other):
+		
         pass
 
  
     ### Determines whether or not the FaceBook user self's name is the same
     ### as the Facebook user other's name
     def __eq__(self, other):
-        pass
+		if(self.name == other):
+			return true
+			
+		return false
 
 
     ### Return a list of names in alphabetical order of FaceBook user self's friends
     def getFriends(self):
-        pass
-
-      
+		sortedFriends =sorted(self.friends)
+		return sortedFriends
 
     ### Add FaceBook user person to the list of self's friends
     def addFriend(self, person):

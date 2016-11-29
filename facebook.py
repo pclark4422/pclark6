@@ -40,41 +40,44 @@ def addUser(selection, users):
         
 ##lists the user's friends
 def listFriends(selection, users):
-    try:
+
+	try:
         
-        ##Checks to make sure there are only 2 arguements passed
-        if (len(selection) != 2):
-            raise Args
-        
-        ##Checks if the name argument is blank
-        if (selection[1] == ""):
-            raise ValueError
-        
-        ##Checks if the user exists
-        if selection[1] in users:
-            person = users[selection[1]]
-            
-            ##Checks if the user has any friends
-            if (len(person.friends) == 0):
-                raise IndexError
-            
-            print("Friends of " + person.name + " are")
-            for buddy in person.friends:
-                print(buddy)
-        else:
-            raise KeyError
-                            
-    except ValueError:
-        print("ERROR: The L command requires exactly 1 name input.  Type 'M' to see menu options")
-    
-    except Args:
-        print("ERROR: The L command requires exactly 1 name input.  Type 'M' to see menu options")
+		##Checks to make sure there are only 2 arguements passed
+		if (len(selection) != 2):
+			raise Args
+			
+		person = Friend(selection[1])
+		
+		##Checks if the name argument is blank
+		if (selection[1] == ""):
+			raise ValueError
+
+		##Checks if the user exists
+		if selection[1] in users:
+			person = users[selection[1]]
+		else:
+			raise KeyError
+			
+		##Checks if the user has any friends
+		if (len(person.friends) == 0):
+			raise IndexError
+			
+		print("Friends of " + person.name + " are")
+		for buddy in person.getFriends():
+			print(buddy)
+   
+	except ValueError:
+		print("ERROR: The L command requires exactly 1 name input.  Type 'M' to see menu options")
+
+	except Args:
+		print("ERROR: The L command requires exactly 1 name input.  Type 'M' to see menu options")
                 
-    except KeyError:
-        print("ERROR: " + person.name + " not in facebook")
+	except KeyError:
+		print("ERROR: " + person.name + " not in facebook")
                         
-    except IndexError:
-        print(selection[1] + " has no friends") 
+	except IndexError:
+		print(selection[1] + " has no friends") 
 
 ##Displays the main menu of the program
 def menu(): 
@@ -170,7 +173,7 @@ def unfriend(selection, users):
         person1.removeFriend(person2.name)
         person2.removeFriend(person1.name) 
         
-        print(person1.name + " and " + person2.name + "are no longer friends")
+        print(person1.name + " and " + person2.name + " are no longer friends")
         
     except Args:
         print("ERROR: The f command requires exactly 2 name inputs.  Type 'M' to see menu options")
@@ -191,15 +194,24 @@ def unfriend(selection, users):
 
 ##Checks to see if the two users are friends
 def areFriends(selection, users):
-  
-    person1 = users[selection[1]]
-    person2 = users[selection[2]]
+	try:
+	##Checks to make sure both names are in registered users
+		if (selection[1] not in users or selection[2] not in users):
+			raise LookupError
+			
+		person1 = users[selection[1]]
+		person2 = users[selection[2]]
+		
+		if(person1.name in person2.friends and person2.name in person1.friends):
+			return True
+	
+	except LookupError:
+		print("ERROR: One or more user names not found")
     
     
-    if(person1.name in person2.friends and person2.name in person1.friends):
-        return True
+
     
-    return False
+	return False
 
 ## main body of the program
 def main():
@@ -210,8 +222,8 @@ def main():
     menu()
     print("\n")    
         
-    while(selection[0] != "x" and selection[0] !="X"):            
-        selection = input().split(" ")
+    while(selection[0] != "x" and selection[0] !="X"):
+        selection = raw_input().split(" ")
         try:
             ##Checks if the number of arguments is in range
             if (selection[0] == "" or len(selection) > 3):
