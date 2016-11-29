@@ -41,43 +41,43 @@ def addUser(selection, users):
 ##lists the user's friends
 def listFriends(selection, users):
 
-	try:
+    try:
         
-		##Checks to make sure there are only 2 arguements passed
-		if (len(selection) != 2):
-			raise Args
-			
-		person = Friend(selection[1])
-		
-		##Checks if the name argument is blank
-		if (selection[1] == ""):
-			raise ValueError
+        ##Checks to make sure there are only 2 arguements passed
+        if (len(selection) != 2):
+            raise Args
+            
+        person = Friend(selection[1])
+        
+        ##Checks if the name argument is blank
+        if (selection[1] == ""):
+            raise ValueError
 
-		##Checks if the user exists
-		if selection[1] in users:
-			person = users[selection[1]]
-		else:
-			raise KeyError
-			
-		##Checks if the user has any friends
-		if (len(person.friends) == 0):
-			raise IndexError
-			
-		print("Friends of " + person.name + " are")
-		for buddy in person.getFriends():
-			print(buddy)
+        ##Checks if the user exists
+        if selection[1] in users:
+            person = users[selection[1]]
+        else:
+            raise KeyError
+            
+        ##Checks if the user has any friends
+        if (len(person.friends) == 0):
+            raise IndexError
+            
+        print("Friends of " + person.name + " are")
+        for buddy in person.getFriends():
+            print(buddy.name)
    
-	except ValueError:
-		print("ERROR: The L command requires exactly 1 name input.  Type 'M' to see menu options")
+    except ValueError:
+        print("ERROR: The L command requires exactly 1 name input.  Type 'M' to see menu options")
 
-	except Args:
-		print("ERROR: The L command requires exactly 1 name input.  Type 'M' to see menu options")
+    except Args:
+        print("ERROR: The L command requires exactly 1 name input.  Type 'M' to see menu options")
                 
-	except KeyError:
-		print("ERROR: " + person.name + " not in facebook")
+    except KeyError:
+        print("ERROR: " + person.name + " not in facebook")
                         
-	except IndexError:
-		print(selection[1] + " has no friends") 
+    except IndexError:
+        print(selection[1] + " has no friends") 
 
 ##Displays the main menu of the program
 def menu(): 
@@ -94,7 +94,7 @@ def menu():
     
     pass
 
-def makeFriends(selection, users):
+def makeFriends(selection, users, friends):
     try:
         ##Cehcks to make sure the correct number of arguments are given
         if (len(selection) != 3):
@@ -113,15 +113,21 @@ def makeFriends(selection, users):
             raise LookupError
         
         ##Checks to make sure the two users aren't already friends
-        areFriends(selection, users)
-        if(areFriends(selection, users) == True):
+        if(areFriends(selection, users, friends) == True):
             raise Friends
         
         person1 = users[selection[1]]
         person2 = users[selection[2]]
         
-        person1.addFriend(person2.name)
-        person2.addFriend(person1.name)
+        dictString = ""
+        if(person1 < person2):
+            dictString = person1.name + "*" + person2.name
+        else:
+            dictString = person2.name + "*" + person1.name
+        friends.update({dictString : True})
+        
+        person1.addFriend(person2)
+        person2.addFriend(person1)
         
         print(person1.name + " and " + person2.name + " are now friends")
 
@@ -145,7 +151,7 @@ def makeFriends(selection, users):
     
     pass
 
-def unfriend(selection, users):
+def unfriend(selection, users, friends):
     try:
         ##Cehcks to make sure the correct number of arguments are given
         if (len(selection) != 3):
@@ -164,14 +170,22 @@ def unfriend(selection, users):
             raise LookupError
         
         ##Checks to make sure the two users are friends
-        if(areFriends(selection, users) == False):
+        if(areFriends(selection, users, friends) == False):
             raise Friends
         
         person1 = users[selection[1]]
         person2 = users[selection[2]]
         
-        person1.removeFriend(person2.name)
-        person2.removeFriend(person1.name) 
+        person1.removeFriend(person2)
+        person2.removeFriend(person1)
+
+        dictString = ""
+        if(person1 < person2):
+            dictString = person1.name + "*" + person2.name
+        else:
+            dictString = person2.name + "*" + person1.name
+			
+        friends.pop(dictString, True)
         
         print(person1.name + " and " + person2.name + " are no longer friends")
         
@@ -193,31 +207,36 @@ def unfriend(selection, users):
     pass
 
 ##Checks to see if the two users are friends
-def areFriends(selection, users):
-	try:
-	##Checks to make sure both names are in registered users
-		if (selection[1] not in users or selection[2] not in users):
-			raise LookupError
-			
-		person1 = users[selection[1]]
-		person2 = users[selection[2]]
-		
-		if(person1.name in person2.friends and person2.name in person1.friends):
-			return True
-	
-	except LookupError:
-		print("ERROR: One or more user names not found")
+def areFriends(selection, users, friends):
+    try:
+    ##Checks to make sure both names are in registered users
+        if (selection[1] not in users or selection[2] not in users):
+            raise LookupError
+            
+        person1 = users[selection[1]]
+        person2 = users[selection[2]]
+            
+        dictString = ""
+        if(person1 < person2):
+            dictString = person1.name + "*" + person2.name
+        else:
+            dictString = person2.name + "*" + person1.name
+        
+        if(friends[dictString] == True):
+            return True
+        
     
+    except LookupError:
+        print("ERROR: One or more user names not found")
     
-
-    
-	return False
+    return False
 
 ## main body of the program
 def main():
     selection = [" "]
     menuitems = "pPfFuUlLqQxXmMcC"
-    users = {}    
+    users = {}  
+    friends = {}
     
     menu()
     print("\n")    
@@ -249,15 +268,15 @@ def main():
                     
             ##Makes the two people friends
             elif(selection[0] in "fF"):
-                makeFriends(selection, users)
+                makeFriends(selection, users, friends)
                 
             ##Makes two people no longer friends
             elif(selection[0] in "uU"):
-                unfriend(selection, users)
+                unfriend(selection, users, friends)
             
             ##Checks if two people are friends
             elif(selection[0] in "qQ"):
-                print(areFriends(selection, users))
+                print(areFriends(selection, users, friends))
             
             elif(selection[0] in "cC"):
                 print(users)
