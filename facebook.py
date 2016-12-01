@@ -6,6 +6,7 @@ from errors import *
 import sys
 
 def addUser(selection, users):
+    print("addUser")
     try:
         ##Checks the number of arguments in selection
         if (len(selection) != 2):
@@ -40,7 +41,7 @@ def addUser(selection, users):
         
 ##lists the user's friends
 def listFriends(selection, users):
-
+    print("listFirends")
     try:
         
         ##Checks to make sure there are only 2 arguements passed
@@ -54,7 +55,7 @@ def listFriends(selection, users):
             raise ValueError
 
         ##Checks if the user exists
-        if selection[1] in users:
+        if selection[1] in users.keys():
             person = users[selection[1]]
         else:
             raise KeyError
@@ -95,6 +96,7 @@ def menu():
     pass
 
 def makeFriends(selection, users, friends):
+    print("makeFriends")
     try:
         ##Cehcks to make sure the correct number of arguments are given
         if (len(selection) != 3):
@@ -109,7 +111,11 @@ def makeFriends(selection, users, friends):
             raise Self
         
         ##Checks to make sure both names are in registered users
-        if (selection[1] not in users or selection[2] not in users):
+        if (selection[1] not in users.keys()):
+            print(selection[1] + " is not in users")
+            raise LookupError
+        if (selection[2] not in users.keys()):
+            print(selection[2] + " is not in users")
             raise LookupError
         
         ##Checks to make sure the two users aren't already friends
@@ -133,15 +139,15 @@ def makeFriends(selection, users, friends):
 
         
     except Args:
-        print("ERROR: The f command requires exactly 2 name inputs.  Type 'M' to see menu options")
+        print("ERROR: The F command requires exactly 2 name inputs.  Type 'M' to see menu options")
 
     
     except ValueError:
-        print("ERROR: The L command requires exactly 2 name inputs.  Type 'M' to see menu options")
+        print("ERROR: The F command requires exactly 2 name inputs.  Type 'M' to see menu options")
 
     
     except LookupError:
-        print("ERROR: One or more user names not found")
+        return
     
     except Friends:
         print("ERROR: " + selection[1] + " and " + selection[2] + " are already friends")
@@ -152,6 +158,7 @@ def makeFriends(selection, users, friends):
     pass
 
 def unfriend(selection, users, friends):
+    print("unfriend")
     try:
         ##Cehcks to make sure the correct number of arguments are given
         if (len(selection) != 3):
@@ -164,9 +171,13 @@ def unfriend(selection, users, friends):
         ##Checks if trying to unfriend self
         if(selection[1] == selection[2]):
             raise Self
-        
+
         ##Checks to make sure both names are in registered users
-        if (selection[1] not in users or selection[2] not in users):
+        if (selection[1] not in users.keys()):
+            print(selection[1] + " is not in users")
+            raise LookupError
+        if (selection[2] not in users.keys()):
+            print(selection[2] + " is not in users")
             raise LookupError
         
         ##Checks to make sure the two users are friends
@@ -196,7 +207,7 @@ def unfriend(selection, users, friends):
         print("ERROR: The L command requires exactly 2 name inputs.  Type 'M' to see menu options")
     
     except LookupError:
-        print("ERROR: One or more user names not found")
+        return
     
     except Friends:
         print("ERROR: " + selection[1] + " and " + selection[2] + " are not friends")
@@ -208,27 +219,44 @@ def unfriend(selection, users, friends):
 
 ##Checks to see if the two users are friends
 def areFriends(selection, users, friends):
+    print("areFriends")
+    errorString = "blah"
+    print(selection)
+    print(users.keys())
+    print(friends.keys())
     try:
     ##Checks to make sure both names are in registered users
-        if (selection[1] not in users or selection[2] not in users):
+        print(selection[1] + " " + selection[2])
+        if (selection[1] not in users.keys()):
+            errorString = selection[1] + " is not a user"
             raise LookupError
-            
+        elif(selection[2] not in users.keys()):
+            errorString = selection[2] + " is not a user" 
+            raise LookupError		
         person1 = users[selection[1]]
         person2 = users[selection[2]]
             
-        dictString = ""
+        dictString = "blag"
+        print("berofer compare")
         if(person1 < person2):
             dictString = person1.name + "*" + person2.name
         else:
             dictString = person2.name + "*" + person1.name
         
-        if(friends[dictString] == True):
-            return True
-        
+        print(dictString)
+        print(dictString in friends.keys())
+        return(dictString in friends.keys())
+        ##if(dictString in friends.keys()):
+          ##  print("in true")
+            ##return True
+        ##else:
+          ##  print("in else")
+            ##return False
     
     except LookupError:
-        print("ERROR: One or more user names not found")
-    
+        print("in lookup error")
+        return errorString
+		
     return False
 
 ## main body of the program
@@ -277,6 +305,7 @@ def main():
             ##Checks if two people are friends
             elif(selection[0] in "qQ"):
                 print(areFriends(selection, users, friends))
+                print("areFriends selected")
             
             elif(selection[0] in "cC"):
                 print(users)

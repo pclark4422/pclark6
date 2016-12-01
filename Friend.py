@@ -28,7 +28,7 @@ class Friend:
     ### Determines whether or not the FaceBook user self's name is the same
     ### as the Facebook user other's name
     def __eq__(self, other):
-		if(self.name == other):
+		if(self.name == other.name):
 			return True
 			
 		return False
