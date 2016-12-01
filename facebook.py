@@ -6,7 +6,7 @@ from errors import *
 import sys
 
 def addUser(selection, users):
-    print("addUser")
+    ##print("addUser")
     try:
         ##Checks the number of arguments in selection
         if (len(selection) != 2):
@@ -18,10 +18,9 @@ def addUser(selection, users):
         
         person = Friend(selection[1])
               
-        
         ##Checks if the name given is already in the list of users
-        if selection[1] in users.keys():
-            raise LookupError
+        if (selection[1] in users.keys()):
+            return
         
         person = Friend(selection[1])
         users.update({person.name : person})
@@ -41,7 +40,7 @@ def addUser(selection, users):
         
 ##lists the user's friends
 def listFriends(selection, users):
-    print("listFirends")
+    ##print("listFirends")
     try:
         
         ##Checks to make sure there are only 2 arguements passed
@@ -96,7 +95,7 @@ def menu():
     pass
 
 def makeFriends(selection, users, friends):
-    print("makeFriends")
+    ##print("makeFriends")
     try:
         ##Cehcks to make sure the correct number of arguments are given
         if (len(selection) != 3):
@@ -113,10 +112,10 @@ def makeFriends(selection, users, friends):
         ##Checks to make sure both names are in registered users
         if (selection[1] not in users.keys()):
             print(selection[1] + " is not in users")
-            raise LookupError
+            return
         if (selection[2] not in users.keys()):
             print(selection[2] + " is not in users")
-            raise LookupError
+            return
         
         ##Checks to make sure the two users aren't already friends
         if(areFriends(selection, users, friends) == True):
@@ -158,7 +157,7 @@ def makeFriends(selection, users, friends):
     pass
 
 def unfriend(selection, users, friends):
-    print("unfriend")
+    ##print("unfriend")
     try:
         ##Cehcks to make sure the correct number of arguments are given
         if (len(selection) != 3):
@@ -175,10 +174,10 @@ def unfriend(selection, users, friends):
         ##Checks to make sure both names are in registered users
         if (selection[1] not in users.keys()):
             print(selection[1] + " is not in users")
-            raise LookupError
+            return
         if (selection[2] not in users.keys()):
             print(selection[2] + " is not in users")
-            raise LookupError
+            return
         
         ##Checks to make sure the two users are friends
         if(areFriends(selection, users, friends) == False):
@@ -219,32 +218,38 @@ def unfriend(selection, users, friends):
 
 ##Checks to see if the two users are friends
 def areFriends(selection, users, friends):
-    print("areFriends")
+    ##print("areFriends")
     errorString = "blah"
-    print(selection)
-    print(users.keys())
-    print(friends.keys())
+    ##print(selection)
+    ##print(users.keys())
+    ##print(friends.keys())
     try:
     ##Checks to make sure both names are in registered users
-        print(selection[1] + " " + selection[2])
+        ##print(selection[1] + " " + selection[2])
+        if (len(selection) != 3):
+            raise Args
+			
         if (selection[1] not in users.keys()):
             errorString = selection[1] + " is not a user"
-            raise LookupError
+            ##print("selection 1")
+            return errorString
         elif(selection[2] not in users.keys()):
             errorString = selection[2] + " is not a user" 
-            raise LookupError		
+            ##print("selection 2")
+            return	errorString	
+			
         person1 = users[selection[1]]
         person2 = users[selection[2]]
             
         dictString = "blag"
-        print("berofer compare")
+        ##print("berofer compare")
         if(person1 < person2):
             dictString = person1.name + "*" + person2.name
         else:
             dictString = person2.name + "*" + person1.name
         
-        print(dictString)
-        print(dictString in friends.keys())
+        ##print(dictString)
+        ##print(dictString in friends.keys())
         return(dictString in friends.keys())
         ##if(dictString in friends.keys()):
           ##  print("in true")
@@ -254,8 +259,9 @@ def areFriends(selection, users, friends):
             ##return False
     
     except LookupError:
-        print("in lookup error")
-        return errorString
+        
+        print("in friends error")
+        ##return errorString
 		
     return False
 
@@ -270,7 +276,7 @@ def main():
     print("\n")    
         
     while(selection[0] != "x" and selection[0] !="X"):
-        selection = raw_input().split(" ")
+        selection = input().split(" ")
         try:
             ##Checks if the number of arguments is in range
             if (selection[0] == "" or len(selection) > 3):
@@ -305,7 +311,7 @@ def main():
             ##Checks if two people are friends
             elif(selection[0] in "qQ"):
                 print(areFriends(selection, users, friends))
-                print("areFriends selected")
+                ##print("areFriends selected")
             
             elif(selection[0] in "cC"):
                 print(users)
